@@ -46,6 +46,8 @@ public class Util {
 
             readers.Add(typeof(SpellID), r => (SpellID)r.ReadUInt32());
             readers.Add(typeof(CM_Vendor.ItemProfile), r => CM_Vendor.ItemProfile.read(r));
+            readers.Add(typeof(CM_Fellowship.Fellow), r => CM_Fellowship.Fellow.read(r));
+            readers.Add(typeof(CM_Fellowship.FellowshipLock__GuessedName), r => CM_Fellowship.FellowshipLock__GuessedName.read(r));
         }
     }
 
