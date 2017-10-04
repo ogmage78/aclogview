@@ -1032,7 +1032,7 @@ public enum SMainCat
 {
     Cooldown_Category = 0x00,
     Life_Magic_Non_Natural_Armor_Category = 0x50,   // All Life spells except those which affect natural armor like Armor Self I etc.
-    All_Skills_Reduction_Category = 0x60,
+    All_Skills_And_Vitals_Reduction_Category = 0x60, // Vitae and other stat reduction spells
     Dirty_Fighting_Debuff_Category = 0x80,
     War_Item_Creature_Void_Magic_Category = 0x90,   // Seems to be a catch all
     Natural_Armor_Category = 0xa0

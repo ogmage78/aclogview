@@ -167,7 +167,7 @@ public class CM_Inventory : MessageProcessor {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
             rootNode.Nodes.Add("i_item = " + Utility.FormatGuid(i_item));
-            rootNode.Nodes.Add("i_equipMask = " + Utility.FormatGuid(i_equipMask));
+            rootNode.Nodes.Add("i_equipMask = " + (INVENTORY_LOC)i_equipMask);
             treeView.Nodes.Add(rootNode);
         }
     }
@@ -217,12 +217,12 @@ public class CM_Inventory : MessageProcessor {
 
     public class GetAndWieldItem : Message {
         public uint i_item;
-        public uint i_loc;
+        public uint i_equipMask;
 
         public static GetAndWieldItem read(BinaryReader binaryReader) {
             GetAndWieldItem newObj = new GetAndWieldItem();
             newObj.i_item = binaryReader.ReadUInt32();
-            newObj.i_loc = binaryReader.ReadUInt32();
+            newObj.i_equipMask = binaryReader.ReadUInt32();
             return newObj;
         }
 
@@ -230,7 +230,7 @@ public class CM_Inventory : MessageProcessor {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
             rootNode.Nodes.Add("i_item = " + Utility.FormatGuid(i_item));
-            rootNode.Nodes.Add("i_loc = " + i_loc);
+            rootNode.Nodes.Add("i_equipMask = " + (INVENTORY_LOC)i_equipMask);
             treeView.Nodes.Add(rootNode);
         }
     }

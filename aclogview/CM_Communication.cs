@@ -218,16 +218,39 @@ public class CM_Communication : MessageProcessor {
 
     public class ChannelBroadcast : Message
     {
+        public bool SendingBroadcast = false;
+        public uint Opcode;
         public uint GroupChatType;
-        public uint Unknown;
+        public PStringChar SenderName;
+        public ushort SenderNameSize;
         public PStringChar MessageText;
 
         public static ChannelBroadcast read(BinaryReader binaryReader)
         {
             var newObj = new ChannelBroadcast();
+            // Check for game action (0xF7B1) opcode which indicates a sent broadast. Received messages use a game event (0xF7B0) message instead.
+            binaryReader.BaseStream.Position = (binaryReader.BaseStream.Position - 12);
+            newObj.Opcode = binaryReader.ReadUInt32();
+            if ( newObj.Opcode == 0x0000F7B1) { // Sent broadcasts use 0xF7B1.
+                newObj.SendingBroadcast = true; 
+            }
+            binaryReader.BaseStream.Position = (binaryReader.BaseStream.Position + 8);
             newObj.GroupChatType = binaryReader.ReadUInt32();
-            newObj.Unknown = binaryReader.ReadUInt32();
-            newObj.MessageText = PStringChar.read(binaryReader);
+            newObj.SenderNameSize = binaryReader.ReadUInt16();
+            if (newObj.SenderNameSize == 0) {   // Received a message with no sender name
+                binaryReader.ReadBytes(2);      // so we skip 2 bytes of padding.
+                newObj.MessageText = PStringChar.read(binaryReader);
+            }
+            else { // Need to seek back 2 bytes and process normally.
+                 binaryReader.BaseStream.Position = (binaryReader.BaseStream.Position - 2);
+                if (newObj.SendingBroadcast == true) {
+                    newObj.MessageText = PStringChar.read(binaryReader);
+                }
+                else { // Received message with sender and message.
+                    newObj.SenderName = PStringChar.read(binaryReader);
+                    newObj.MessageText = PStringChar.read(binaryReader);
+                }
+            }
             return newObj;
         }
 
@@ -235,9 +258,14 @@ public class CM_Communication : MessageProcessor {
         {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
-            rootNode.Nodes.Add("GroupChatType = " + GroupChatType);
-            rootNode.Nodes.Add("Unknown = " + Unknown);
-            rootNode.Nodes.Add("MessageText = " + MessageText.m_buffer);
+            rootNode.Nodes.Add("GroupChatType = " + (GroupChatType)GroupChatType);
+            if (SenderNameSize == 0 || SendingBroadcast == true) {  // Some received messages and all sent messages do not have a sender name.
+                rootNode.Nodes.Add("MessageText = " + MessageText);
+            }
+            else {
+                rootNode.Nodes.Add("SenderName = " + SenderName);
+                rootNode.Nodes.Add("MessageText = " + MessageText);
+            }
             treeView.Nodes.Add(rootNode);
         }
     }
@@ -455,7 +483,7 @@ public class CM_Communication : MessageProcessor {
             rootNode.Nodes.Add("MessageText = " + MessageText.m_buffer);
             rootNode.Nodes.Add("SenderName = " + SenderName.m_buffer);
             rootNode.Nodes.Add("SenderID = " + Utility.FormatGuid(this.SenderID));                        
-            rootNode.Nodes.Add("ChatMessageType = " + ChatMessageType);
+            rootNode.Nodes.Add("ChatMessageType = " + (eChatTypes)ChatMessageType);
             treeView.Nodes.Add(rootNode);
         }
     }
@@ -487,7 +515,7 @@ public class CM_Communication : MessageProcessor {
             rootNode.Nodes.Add("SenderName = " + SenderName.m_buffer);
             rootNode.Nodes.Add("SenderID = " +Utility.FormatGuid(this.SenderID));
             rootNode.Nodes.Add("Range = " + Range);
-            rootNode.Nodes.Add("ChatMessageType = " + ChatMessageType);
+            rootNode.Nodes.Add("ChatMessageType = " + (eChatTypes)ChatMessageType);
             treeView.Nodes.Add(rootNode);
         }
     }
@@ -499,7 +527,7 @@ public class CM_Communication : MessageProcessor {
         public uint SenderID;
         public uint TargetID;
         public uint ChatMessageType;
-        public uint Unknown;
+        public uint secretFlags;  // Unknown use
 
         public static HearDirectSpeech read(BinaryReader binaryReader)
         {
@@ -509,7 +537,7 @@ public class CM_Communication : MessageProcessor {
             newObj.SenderID = binaryReader.ReadUInt32();
             newObj.TargetID = binaryReader.ReadUInt32();
             newObj.ChatMessageType = binaryReader.ReadUInt32();
-            newObj.Unknown = binaryReader.ReadUInt32();
+            newObj.secretFlags = binaryReader.ReadUInt32();
             return newObj;
         }
 
@@ -521,8 +549,8 @@ public class CM_Communication : MessageProcessor {
             rootNode.Nodes.Add("SenderName = " + SenderName.m_buffer);
             rootNode.Nodes.Add("SenderID = " + Utility.FormatGuid(this.SenderID));
             rootNode.Nodes.Add("TargetID = " + Utility.FormatGuid(this.TargetID));                    
-            rootNode.Nodes.Add("ChatMessageType = " + ChatMessageType);
-            rootNode.Nodes.Add("Unknown = " + Unknown);
+            rootNode.Nodes.Add("ChatMessageType = " + (eChatTypes)ChatMessageType);
+            rootNode.Nodes.Add("secretFlags = " + secretFlags);
             treeView.Nodes.Add(rootNode);
         }
     }
@@ -565,7 +593,7 @@ public class CM_Communication : MessageProcessor {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
             rootNode.Nodes.Add("MessageText = " + MessageText.m_buffer);
-            rootNode.Nodes.Add("ChatMessageType = " + ChatMessageType);
+            rootNode.Nodes.Add("ChatMessageType = " + (eChatTypes)ChatMessageType);
             treeView.Nodes.Add(rootNode);
         }
     }
