@@ -282,9 +282,9 @@ public class CM_Magic : MessageProcessor {
     }
 
     public class EnchantmentID {
-
         public ushort i_spell_id;
         public ushort layer;
+        
         public static EnchantmentID read(BinaryReader binaryReader)
         {
             EnchantmentID newObj = new EnchantmentID();
@@ -374,7 +374,7 @@ public class CM_Magic : MessageProcessor {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
             for (int i = 0; i < enchantmentList.list.Count; i++) {
-                TreeNode listNode = rootNode.Nodes.Add($"enchantment {i + 1} = ");
+                TreeNode listNode = rootNode.Nodes.Add($"enchantment {i+1} = ");
                 var enchantment = enchantmentList.list[i];
                 enchantment.contributeToTreeNode(listNode);
                 listNode.Expand();
