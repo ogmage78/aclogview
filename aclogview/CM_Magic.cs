@@ -405,7 +405,8 @@ public class CM_Magic : MessageProcessor {
         }
     }
 
-    public class UpdateMultipleEnchantments : Message { // This message does not appear to be used. It was not found in any pcaps.
+    // This message does not appear to be used. It was not found in any pcaps.
+    public class UpdateMultipleEnchantments : Message { 
         public PList<Enchantment> list;
 
         public static UpdateMultipleEnchantments read(BinaryReader binaryReader) {
