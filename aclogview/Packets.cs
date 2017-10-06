@@ -38,6 +38,7 @@ public class Util {
             readers.Add(typeof(SKILL_ADVANCEMENT_CLASS), r => (SKILL_ADVANCEMENT_CLASS)r.ReadUInt32());
 
             readers.Add(typeof(CM_Magic.Enchantment), r => CM_Magic.Enchantment.read(r));
+            readers.Add(typeof(CM_Magic.EnchantmentID), r => CM_Magic.EnchantmentID.read(r));
             readers.Add(typeof(CM_Social.FriendData), r => CM_Social.FriendData.read(r));
             readers.Add(typeof(Attribute), r => Attribute.read(r));
             readers.Add(typeof(SecondaryAttribute), r => SecondaryAttribute.read(r));
