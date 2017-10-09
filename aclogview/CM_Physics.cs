@@ -1497,7 +1497,7 @@ public class CM_Physics : MessageProcessor {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
             rootNode.Nodes.Add("object_id = " + Utility.FormatGuid(this.object_id));
-            rootNode.Nodes.Add("sound = " + sound);
+            rootNode.Nodes.Add("sound = " + "(" + sound + ") " + (SoundType)sound);
             rootNode.Nodes.Add("volume = " + volume);
             treeView.Nodes.Add(rootNode);
         }
