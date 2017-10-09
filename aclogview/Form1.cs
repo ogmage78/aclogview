@@ -832,6 +832,11 @@ namespace aclogview
         private void checkBoxUseHex_CheckedChanged(object sender, EventArgs e)
         {
             Globals.UseHex = checkBoxUseHex.Checked;
+            updateData();
+            if (listView_Packets.FocusedItem != null)
+            {
+                 listView_Packets.Focus();
+            }
         }
 
 
