@@ -32,23 +32,29 @@ public class CM_Magic : MessageProcessor {
                     break;
                 }
             // TODO: Evt_Magic__ResearchSpell_ID
-            case PacketOpcode.UPDATE_SPELL_EVENT: {
-                    UpdateSpell message = UpdateSpell.read(messageDataReader);
-                    message.contributeToTreeView(outputTreeView);
-                    break;
-                }
-            case PacketOpcode.REMOVE_SPELL_EVENT: {
+            //case PacketOpcode.UPDATE_SPELL_EVENT: {
+            //        UpdateSpell message = UpdateSpell.read(messageDataReader);
+            //        message.contributeToTreeView(outputTreeView);
+            //        break;
+            //    }
+            //case PacketOpcode.REMOVE_SPELL_EVENT: {
+            //        RemoveSpell message = RemoveSpell.read(messageDataReader);
+            //        message.contributeToTreeView(outputTreeView);
+            //        break;
+            //    }
+            //case PacketOpcode.UPDATE_ENCHANTMENT_EVENT: {
+            //        UpdateEnchantment message = UpdateEnchantment.read(messageDataReader);
+            //        message.contributeToTreeView(outputTreeView);
+            //        break;
+            //    }
+            //case PacketOpcode.REMOVE_ENCHANTMENT_EVENT: {
+            //        RemoveEnchantment message = RemoveEnchantment.read(messageDataReader);
+            //        message.contributeToTreeView(outputTreeView);
+            //        break;
+            //    }
+            case PacketOpcode.Evt_Magic__RemoveSpell_ID:
+                {
                     RemoveSpell message = RemoveSpell.read(messageDataReader);
-                    message.contributeToTreeView(outputTreeView);
-                    break;
-                }
-            case PacketOpcode.UPDATE_ENCHANTMENT_EVENT: {
-                    UpdateEnchantment message = UpdateEnchantment.read(messageDataReader);
-                    message.contributeToTreeView(outputTreeView);
-                    break;
-                }
-            case PacketOpcode.REMOVE_ENCHANTMENT_EVENT: {
-                    RemoveEnchantment message = RemoveEnchantment.read(messageDataReader);
                     message.contributeToTreeView(outputTreeView);
                     break;
                 }
@@ -72,9 +78,21 @@ public class CM_Magic : MessageProcessor {
                     message.contributeToTreeView(outputTreeView);
                     break;
                 }
+            case PacketOpcode.Evt_Magic__UpdateSpell_ID:
+                {
+                    UpdateSpell message = UpdateSpell.read(messageDataReader);
+                    message.contributeToTreeView(outputTreeView);
+                    break;
+                }
             case PacketOpcode.Evt_Magic__UpdateEnchantment_ID:
                 {
                     UpdateEnchantment message = UpdateEnchantment.read(messageDataReader);
+                    message.contributeToTreeView(outputTreeView);
+                    break;
+                }
+            case PacketOpcode.Evt_Magic__RemoveEnchantment_ID:
+                {
+                    RemoveEnchantment message = RemoveEnchantment.read(messageDataReader);
                     message.contributeToTreeView(outputTreeView);
                     break;
                 }
@@ -89,12 +107,12 @@ public class CM_Magic : MessageProcessor {
 
     public class CastTargetedSpell : Message {
         public uint i_target;
-        public SpellID i_spell_id;
+        public uint i_spell_id;
         
         public static CastTargetedSpell read(BinaryReader binaryReader) {
             CastTargetedSpell newObj = new CastTargetedSpell();
             newObj.i_target = binaryReader.ReadUInt32();
-            newObj.i_spell_id = (SpellID)binaryReader.ReadUInt32();
+            newObj.i_spell_id = binaryReader.ReadUInt32();
             return newObj;
         }
 
@@ -102,58 +120,58 @@ public class CM_Magic : MessageProcessor {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
             rootNode.Nodes.Add("i_target = " + Utility.FormatGuid(this.i_target));
-            rootNode.Nodes.Add("i_spell_id = " + i_spell_id);           
+            rootNode.Nodes.Add("i_spell_id = " + "(" + i_spell_id + ") " + (SpellID)i_spell_id);       
             treeView.Nodes.Add(rootNode);
         }
     }
 
     public class CastUntargetedSpell : Message {
-        public SpellID i_spell_id;
+        public uint i_spell_id;
 
         public static CastUntargetedSpell read(BinaryReader binaryReader) {
             CastUntargetedSpell newObj = new CastUntargetedSpell();
-            newObj.i_spell_id = (SpellID)binaryReader.ReadUInt32();
+            newObj.i_spell_id = binaryReader.ReadUInt32();
             return newObj;
         }
 
         public override void contributeToTreeView(TreeView treeView) {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();          
-            rootNode.Nodes.Add("i_spell_id = " + Utility.FormatGuid((uint)this.i_spell_id));
+            rootNode.Nodes.Add("i_spell_id = " + "(" + i_spell_id + ") " + (SpellID)i_spell_id);
             treeView.Nodes.Add(rootNode);
         }
     }
 
     public class RemoveSpell : Message {
-        public SpellID i_spell_id;
+        public uint i_spell_id;
 
         public static RemoveSpell read(BinaryReader binaryReader) {
             RemoveSpell newObj = new RemoveSpell();
-            newObj.i_spell_id = (SpellID)binaryReader.ReadUInt32();
+            newObj.i_spell_id = binaryReader.ReadUInt32();
             return newObj;
         }
 
         public override void contributeToTreeView(TreeView treeView) {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
-            rootNode.Nodes.Add("i_spell_id = " + Utility.FormatGuid((uint)this.i_spell_id));
+            rootNode.Nodes.Add("i_spell_id = " + "(" + i_spell_id + ") " + (SpellID)i_spell_id);
             treeView.Nodes.Add(rootNode);
         }
     }
 
     public class UpdateSpell : Message {
-        public SpellID i_spell_id;
+        public uint i_spell_id;
 
         public static UpdateSpell read(BinaryReader binaryReader) {
             UpdateSpell newObj = new UpdateSpell();
-            newObj.i_spell_id = (SpellID)binaryReader.ReadUInt32();
+            newObj.i_spell_id = binaryReader.ReadUInt32();
             return newObj;
         }
 
         public override void contributeToTreeView(TreeView treeView) {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
-            rootNode.Nodes.Add("i_spell_id = " + Utility.FormatGuid((uint)this.i_spell_id));
+            rootNode.Nodes.Add("i_spell_id = " + "(" + i_spell_id + ") " + (SpellID)i_spell_id);
             treeView.Nodes.Add(rootNode);
         }
     }
@@ -208,7 +226,7 @@ public class CM_Magic : MessageProcessor {
     }
 
     public class Enchantment {
-        public ushort id;
+        public ushort i_spell_id;
         public ushort layer;
         public ushort spell_category;
         public ushort has_spell_set_id;
@@ -224,7 +242,7 @@ public class CM_Magic : MessageProcessor {
 
         public static Enchantment read(BinaryReader binaryReader) {
             Enchantment newObj = new Enchantment();
-            newObj.id = binaryReader.ReadUInt16();
+            newObj.i_spell_id = binaryReader.ReadUInt16();
             newObj.layer = binaryReader.ReadUInt16();
             newObj.spell_category = binaryReader.ReadUInt16();
             newObj.has_spell_set_id = binaryReader.ReadUInt16();
@@ -241,7 +259,7 @@ public class CM_Magic : MessageProcessor {
         }
 
         public void contributeToTreeNode(TreeNode node) {
-            node.Nodes.Add("id = " +  "(" + id + ") " + (SpellID)id);
+            node.Nodes.Add("i_spell_id = " +  "(" + i_spell_id + ") " + (SpellID)i_spell_id);
             node.Nodes.Add("layer = " + layer);
             node.Nodes.Add("spell_category = " + Utility.FormatGuid(spell_category));
             node.Nodes.Add("has_spell_set_id = " + has_spell_set_id);
@@ -250,8 +268,7 @@ public class CM_Magic : MessageProcessor {
             if (duration == -1) {
                 node.Nodes.Add("duration = " + duration + " (indefinite)");
             }
-            else
-            {
+            else {
                 node.Nodes.Add("duration = " + duration + " seconds");
             }
             node.Nodes.Add("caster = " + Utility.FormatGuid(caster));
@@ -264,36 +281,63 @@ public class CM_Magic : MessageProcessor {
         }
     }
 
+    public class EnchantmentID {
+        public ushort i_spell_id;
+        public ushort layer;
+        
+        public static EnchantmentID read(BinaryReader binaryReader)
+        {
+            EnchantmentID newObj = new EnchantmentID();
+            newObj.i_spell_id = binaryReader.ReadUInt16();
+            newObj.layer = binaryReader.ReadUInt16();
+            return newObj;
+        }
+
+        public void contributeToTreeNode(TreeNode treeView)
+        {
+            treeView.Nodes.Add("i_spell_id = " + "(" + i_spell_id + ") " + (SpellID)i_spell_id);
+            treeView.Nodes.Add("layer = " + layer);
+        }
+    }
+
+    
+
     public class DispelEnchantment : Message {
-        public uint eid;
+        public ushort i_spell_id;
+        public ushort layer;
 
         public static DispelEnchantment read(BinaryReader binaryReader) {
             DispelEnchantment newObj = new DispelEnchantment();
-            newObj.eid = binaryReader.ReadUInt32();
+            newObj.i_spell_id = binaryReader.ReadUInt16();
+            newObj.layer = binaryReader.ReadUInt16();
             return newObj;
         }
 
         public override void contributeToTreeView(TreeView treeView) {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
-            rootNode.Nodes.Add("eid = " + eid);
+            rootNode.Nodes.Add("i_spell_id = " + "(" + i_spell_id + ") " + (SpellID)i_spell_id);
+            rootNode.Nodes.Add("layer = " + layer);
             treeView.Nodes.Add(rootNode);
         }
     }
 
     public class RemoveEnchantment : Message {
-        public uint eid;
+        public ushort i_spell_id;
+        public ushort layer;
 
         public static RemoveEnchantment read(BinaryReader binaryReader) {
             RemoveEnchantment newObj = new RemoveEnchantment();
-            newObj.eid = binaryReader.ReadUInt32();
+            newObj.i_spell_id = binaryReader.ReadUInt16();
+            newObj.layer = binaryReader.ReadUInt16();
             return newObj;
         }
 
         public override void contributeToTreeView(TreeView treeView) {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
-            rootNode.Nodes.Add("eid = " + eid);
+            rootNode.Nodes.Add("i_spell_id = " + "(" + i_spell_id + ") " + (SpellID)i_spell_id);
+            rootNode.Nodes.Add("layer = " + layer);
             treeView.Nodes.Add(rootNode);
         }
     }
@@ -312,48 +356,57 @@ public class CM_Magic : MessageProcessor {
             rootNode.Expand();
             TreeNode enchantmentNode = rootNode.Nodes.Add("enchantment = ");
             enchant.contributeToTreeNode(enchantmentNode);
-            enchantmentNode.ExpandAll(); // TEST
+            enchantmentNode.ExpandAll();
             treeView.Nodes.Add(rootNode);
         }
     }
 
     public class DispelMultipleEnchantments : Message {
-        public PList<uint> list;
+        public PList<EnchantmentID> enchantmentList;
 
         public static DispelMultipleEnchantments read(BinaryReader binaryReader) {
             DispelMultipleEnchantments newObj = new DispelMultipleEnchantments();
-            newObj.list = PList<uint>.read(binaryReader);
+            newObj.enchantmentList = PList<EnchantmentID>.read(binaryReader);
             return newObj;
         }
 
         public override void contributeToTreeView(TreeView treeView) {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
-            TreeNode listNode = rootNode.Nodes.Add("list = ");
-            list.contributeToTreeNode(listNode);
+            for (int i = 0; i < enchantmentList.list.Count; i++) {
+                TreeNode listNode = rootNode.Nodes.Add($"enchantment {i+1} = ");
+                var enchantment = enchantmentList.list[i];
+                enchantment.contributeToTreeNode(listNode);
+                listNode.Expand();
+            }
             treeView.Nodes.Add(rootNode);
         }
     }
 
     public class RemoveMultipleEnchantments : Message {
-        public PList<uint> list;
+        public PList<EnchantmentID> enchantmentList;
 
         public static RemoveMultipleEnchantments read(BinaryReader binaryReader) {
             RemoveMultipleEnchantments newObj = new RemoveMultipleEnchantments();
-            newObj.list = PList<uint>.read(binaryReader);
+            newObj.enchantmentList = PList<EnchantmentID>.read(binaryReader);
             return newObj;
         }
 
         public override void contributeToTreeView(TreeView treeView) {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
-            TreeNode listNode = rootNode.Nodes.Add("list = ");
-            list.contributeToTreeNode(listNode);
+            for (int i = 0; i < enchantmentList.list.Count; i++) {
+                TreeNode listNode = rootNode.Nodes.Add($"enchantment {i+1} = ");
+                var enchantment = enchantmentList.list[i];
+                enchantment.contributeToTreeNode(listNode);
+                listNode.Expand();
+            }
             treeView.Nodes.Add(rootNode);
         }
     }
 
-    public class UpdateMultipleEnchantments : Message {
+    // This message does not appear to be used. It was not found in any pcaps.
+    public class UpdateMultipleEnchantments : Message { 
         public PList<Enchantment> list;
 
         public static UpdateMultipleEnchantments read(BinaryReader binaryReader) {
