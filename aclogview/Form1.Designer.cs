@@ -185,7 +185,7 @@
             // 
             this.splitContainer_Bottom.Panel2.Controls.Add(this.treeView_ParsedData);
             this.splitContainer_Bottom.Size = new System.Drawing.Size(1520, 414);
-            this.splitContainer_Bottom.SplitterDistance = 1130;
+            this.splitContainer_Bottom.SplitterDistance = 1074;
             this.splitContainer_Bottom.TabIndex = 0;
             // 
             // textBox_PacketData
@@ -194,7 +194,7 @@
             this.textBox_PacketData.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox_PacketData.Location = new System.Drawing.Point(0, 0);
             this.textBox_PacketData.Name = "textBox_PacketData";
-            this.textBox_PacketData.Size = new System.Drawing.Size(1126, 410);
+            this.textBox_PacketData.Size = new System.Drawing.Size(1070, 410);
             this.textBox_PacketData.TabIndex = 0;
             this.textBox_PacketData.Text = "";
             // 
@@ -204,7 +204,7 @@
             this.treeView_ParsedData.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView_ParsedData.Location = new System.Drawing.Point(0, 0);
             this.treeView_ParsedData.Name = "treeView_ParsedData";
-            this.treeView_ParsedData.Size = new System.Drawing.Size(382, 410);
+            this.treeView_ParsedData.Size = new System.Drawing.Size(438, 410);
             this.treeView_ParsedData.TabIndex = 0;
             this.treeView_ParsedData.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_ParsedData_AfterSelect);
             // 

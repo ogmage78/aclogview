@@ -87,7 +87,7 @@ public enum JournalSortCriteria {
 }
 
 public enum FriendsUpdateType {
-    FRIENDS_UPDATE,
+    FRIENDS_UPDATE_FULL,
     FRIENDS_UPDATE_ADD,
     FRIENDS_UPDATE_REMOVE,
     FRIENDS_UPDATE_REMOVE_SILENT,

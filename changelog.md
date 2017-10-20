@@ -1,13 +1,29 @@
+### 2017-10-20
+[Slushnas]
+##### Interface Change
+* Expanded the treeview pane a little to reduce the chance of seeing horizontal scrollbars.
+
+##### Other Changes
+
+* Added support for the AppraiseDone message.
+* Fixed support for SendClientContractTrackerTable (0x0314) and SendClientContractTracker (0x0315) messages.
+* Added a custom enum for contract names.
+* Added support for the AttackDoneEvent.
+* Added some missing character title enum IDs.
+* Fixed FriendsUpdate message.
+* Fixed AddOrSetCharacterTitle and SetDisplayCharacterTitle messages.
+* Other small formatting fixes.
+
 ### 2017-10-18
 [Slushnas]
-#### Interface Changes
+##### Interface Changes
 * The default method for opening files is now the "as messages" mode. This mainly affects opening files from the "Find Opcode In Files" dialog.
 * The "Use Highlighting" checkbox will be unchecked and disabled when viewing a file in "as messages" mode as it was not designed for use in this mode.
 * Fixed a bug where files opened in "as messages" mode could get highlighting applied when it shouldn't be. As a result, larger messages
 will now load faster in some cases.
 * You can now hit the Enter key in the Opcode box to start a search in the "Find Opcode In Files" dialog.
 
-#### Other Changes
+##### Other Changes
 * Renamed Contract cooldown spell enum as it looks like it is shared for all contracts.
 * Added gender enum.
 * Renamed lock related weenie errors as they apply to both chests and doors.
