@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using aclogview;
 
 public class CM_Social : MessageProcessor {
 
@@ -86,7 +87,7 @@ public class CM_Social : MessageProcessor {
         public override void contributeToTreeView(TreeView treeView) {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
-            rootNode.Nodes.Add("i_friendID = " + i_friendID);
+            rootNode.Nodes.Add("i_friendID = " + Utility.FormatGuid(i_friendID));
             treeView.Nodes.Add(rootNode);
         }
     }
@@ -128,14 +129,18 @@ public class CM_Social : MessageProcessor {
         }
 
         public void contributeToTreeNode(TreeNode node) {
-            node.Nodes.Add("m_id = " + m_id);
+            node.Nodes.Add("m_id = " + Utility.FormatGuid(m_id));
             node.Nodes.Add("m_online = " + m_online);
             node.Nodes.Add("m_appearOffline = " + m_appearOffline);
             node.Nodes.Add("m_name = " + m_name);
             TreeNode friendsListNode = node.Nodes.Add("m_friendsList = ");
-            m_friendsList.contributeToTreeNode(friendsListNode);
+            for (int i = 0; i< m_friendsList.list.Count; i++) {
+                friendsListNode.Nodes.Add("m_id = " + Utility.FormatGuid(m_friendsList.list[i]));
+            }
             TreeNode friendOfListNode = node.Nodes.Add("m_friendOfList = ");
-            m_friendOfList.contributeToTreeNode(friendOfListNode);
+            for (int i = 0; i < m_friendOfList.list.Count; i++) {
+                friendOfListNode.Nodes.Add("m_id = " + Utility.FormatGuid(m_friendOfList.list[i]));
+            }
         }
     }
 
@@ -154,7 +159,10 @@ public class CM_Social : MessageProcessor {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
             TreeNode friendDataListNode = rootNode.Nodes.Add("friendDataList = ");
-            friendDataList.contributeToTreeNode(friendDataListNode);
+            for (int i = 0; i < friendDataList.list.Count; i++) {
+                TreeNode friendNode = friendDataListNode.Nodes.Add($"friend \"{friendDataList.list[i].m_name}\" = ");
+                friendDataList.list[i].contributeToTreeNode(friendNode);
+            }
             rootNode.Nodes.Add("updateType = " + updateType);
             treeView.Nodes.Add(rootNode);
         }
@@ -188,7 +196,6 @@ public class CM_Social : MessageProcessor {
 
         public static AddOrSetCharacterTitle read(BinaryReader binaryReader) {
             AddOrSetCharacterTitle newObj = new AddOrSetCharacterTitle();
-            uint constantOne = binaryReader.ReadUInt32();
             newObj.newTitle = (CharacterTitle)binaryReader.ReadUInt32();
             newObj.bSetAsDisplayTitle = binaryReader.ReadInt32();
             return newObj;
@@ -208,7 +215,6 @@ public class CM_Social : MessageProcessor {
 
         public static SetDisplayCharacterTitle read(BinaryReader binaryReader) {
             SetDisplayCharacterTitle newObj = new SetDisplayCharacterTitle();
-            uint constantOne = binaryReader.ReadUInt32();
             newObj.i_i_title = (CharacterTitle)binaryReader.ReadUInt32();
             return newObj;
         }
@@ -240,7 +246,7 @@ public class CM_Social : MessageProcessor {
 
         public void contributeToTreeNode(TreeNode node) {
             node.Nodes.Add("_version = " + _version);
-            node.Nodes.Add("_contract_id = " + _contract_id);
+            node.Nodes.Add("_contract_id = " + (ContractName)_contract_id);
             node.Nodes.Add("_contract_stage = " + _contract_stage);
             node.Nodes.Add("_time_when_done = " + _time_when_done);
             node.Nodes.Add("_time_when_repeats = " + _time_when_repeats);
@@ -258,10 +264,15 @@ public class CM_Social : MessageProcessor {
 
         public override void contributeToTreeView(TreeView treeView) {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
-            rootNode.Expand();
             TreeNode trackerTableNode = rootNode.Nodes.Add("_contractTrackerHash = ");
-            _contractTrackerHash.contributeToTreeNode(trackerTableNode);
+            foreach (uint key in _contractTrackerHash.hashTable.Keys) {
+                TreeNode contractNode = trackerTableNode.Nodes.Add($"contract {(ContractName)key} = ");
+                _contractTrackerHash.hashTable[key].contributeToTreeNode(contractNode);
+            }
             treeView.Nodes.Add(rootNode);
+            rootNode.Expand();
+            rootNode.NextVisibleNode.Expand();
+            treeView.Nodes[0].EnsureVisible();
         }
     }
 
@@ -269,23 +280,41 @@ public class CM_Social : MessageProcessor {
         public CContractTracker contractTracker;
         public int bDeleteContract;
         public int bSetAsDisplayContract;
+        public uint unused1;
+        public uint unused2;
+        public uint unused3;
+        public bool retailPcap = false;
 
         public static SendClientContractTracker read(BinaryReader binaryReader) {
             SendClientContractTracker newObj = new SendClientContractTracker();
             newObj.contractTracker = CContractTracker.read(binaryReader);
             newObj.bDeleteContract = binaryReader.ReadInt32();
             newObj.bSetAsDisplayContract = binaryReader.ReadInt32();
+            // NOTE: Retail pcaps have three extra dwords that are not used by the client 
+            // at the end of the message (message length equals 64). 
+            // ACE servers will not be sending these so we need to check for that.
+            if (binaryReader.BaseStream.Length == 64) {
+                newObj.retailPcap = true;
+                newObj.unused1 = binaryReader.ReadUInt32();
+                newObj.unused2 = binaryReader.ReadUInt32();
+                newObj.unused3 = binaryReader.ReadUInt32();
+            }
             return newObj;
         }
 
         public override void contributeToTreeView(TreeView treeView) {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
-            rootNode.Expand();
             TreeNode trackerNode = rootNode.Nodes.Add("contractTracker = ");
             contractTracker.contributeToTreeNode(trackerNode);
             rootNode.Nodes.Add("bDeleteContract = " + bDeleteContract);
             rootNode.Nodes.Add("bSetAsDisplayContract = " + bSetAsDisplayContract);
+            if (retailPcap == true) {
+                rootNode.Nodes.Add("unused1 = " + Utility.FormatGuid(unused1));
+                rootNode.Nodes.Add("unused2 = " + Utility.FormatGuid(unused2));
+                rootNode.Nodes.Add("unused3 = " + Utility.FormatGuid(unused3));
+            }
             treeView.Nodes.Add(rootNode);
+            rootNode.ExpandAll();
         }
     }
 
@@ -302,7 +331,7 @@ public class CM_Social : MessageProcessor {
         public override void contributeToTreeView(TreeView treeView) {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
-            rootNode.Nodes.Add("i_contract_id = " + i_contract_id);
+            rootNode.Nodes.Add("i_contract_id = " + (ContractName)i_contract_id);
             treeView.Nodes.Add(rootNode);
         }
     }

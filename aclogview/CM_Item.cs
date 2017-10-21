@@ -25,6 +25,12 @@ public class CM_Item : MessageProcessor {
                     message.contributeToTreeView(outputTreeView);
                     break;
                 }
+            case PacketOpcode.Evt_Item__AppraiseDone_ID:
+                {
+                    AppraiseDone message = AppraiseDone.read(messageDataReader);
+                    message.contributeToTreeView(outputTreeView);
+                    break;
+                }
             case PacketOpcode.Evt_Item__QueryItemMana_ID: {
                     QueryItemMana message = QueryItemMana.read(messageDataReader);
                     message.contributeToTreeView(outputTreeView);
@@ -91,6 +97,26 @@ public class CM_Item : MessageProcessor {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
             rootNode.Nodes.Add("etype = " + (WERROR)etype);
+            treeView.Nodes.Add(rootNode);
+        }
+    }
+
+    public class AppraiseDone : Message
+    {
+        public uint e; // The client just zeros this out and all pcaps show it as already being set to 0 by the server.
+
+        public static AppraiseDone read(BinaryReader binaryReader)
+        {
+            AppraiseDone newObj = new AppraiseDone();
+            newObj.e = binaryReader.ReadUInt32();
+            return newObj;
+        }
+
+        public override void contributeToTreeView(TreeView treeView)
+        {
+            TreeNode rootNode = new TreeNode(this.GetType().Name);
+            rootNode.Expand();
+            rootNode.Nodes.Add("e = " + e);
             treeView.Nodes.Add(rootNode);
         }
     }

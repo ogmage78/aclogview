@@ -37,6 +37,12 @@ public class CM_Combat : MessageProcessor {
                     message.contributeToTreeView(outputTreeView);
                     break;
                 }
+            case PacketOpcode.ATTACK_DONE_EVENT:
+                {
+                    AttackDoneEvent message = AttackDoneEvent.read(messageDataReader);
+                    message.contributeToTreeView(outputTreeView);
+                    break;
+                }
             case PacketOpcode.Evt_Combat__QueryHealth_ID: {
                     QueryHealth message = QueryHealth.read(messageDataReader);
                     message.contributeToTreeView(outputTreeView);
@@ -143,6 +149,27 @@ public class CM_Combat : MessageProcessor {
             TreeNode rootNode = new TreeNode(this.GetType().Name);
             rootNode.Expand();
             rootNode.Nodes.Add("i_mode = " + i_mode);
+            treeView.Nodes.Add(rootNode);
+        }
+    }
+
+    public class AttackDoneEvent : Message
+    {
+        public uint etype;
+
+        public static AttackDoneEvent read(BinaryReader binaryReader)
+        {
+            AttackDoneEvent newObj = new AttackDoneEvent();
+            newObj.etype = binaryReader.ReadUInt32();
+            Util.readToAlign(binaryReader);
+            return newObj;
+        }
+
+        public override void contributeToTreeView(TreeView treeView)
+        {
+            TreeNode rootNode = new TreeNode(this.GetType().Name);
+            rootNode.Expand();
+            rootNode.Nodes.Add("etype = " + (WERROR)etype);
             treeView.Nodes.Add(rootNode);
         }
     }
