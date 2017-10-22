@@ -1,3 +1,9 @@
+### 2017-10-22
+[Slushnas]
+##### Interface Changes
+* Added **_Expand All_** and **_Collapse All_** options to the parsed data treeview right-click menu.
+* When toggling **_Display Guid as Hex_** the interface will now restore your position in the treeview after updating instead of scrolling you to the top or bottom.
+
 ### 2017-10-20
 [Slushnas]
 ##### Interface Change

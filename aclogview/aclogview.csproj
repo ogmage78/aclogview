@@ -134,6 +134,7 @@
     <Compile Include="Proto_UI.cs" />
     <Compile Include="Enums\Spells.cs" />
     <Compile Include="Enums\StatTypes.cs" />
+    <Compile Include="TreeviewState.cs" />
     <Compile Include="TextPopup.cs">
       <SubType>Form</SubType>
     </Compile>

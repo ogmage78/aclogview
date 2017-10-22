@@ -813,17 +813,37 @@ namespace aclogview
             updateText();
         }
 
-        private void parsedContextMenu_Click(object sender, EventArgs e)
+        private void parsedContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-
-            if (treeView_ParsedData.Nodes.Count > 0)
-            {
-                strbuilder.Clear();
-                foreach (var node in GetTreeNodes(treeView_ParsedData.Nodes))
-                {
-                    strbuilder.AppendLine(node.Text);
+            if (treeView_ParsedData.Nodes.Count > 0) {
+                var clickedItem = e.ClickedItem.Name;
+                switch (clickedItem) {
+                    case "ExpandAll":
+                        {
+                            var topNode = treeView_ParsedData.TopNode;
+                            treeView_ParsedData.BeginUpdate();
+                            treeView_ParsedData.Nodes[0].ExpandAll();
+                            treeView_ParsedData.TopNode = topNode;
+                            treeView_ParsedData.EndUpdate();
+                            break;
+                        }
+                    case "CollapseAll":
+                        {
+                            treeView_ParsedData.BeginUpdate();
+                            treeView_ParsedData.Nodes[0].Collapse(false);
+                            treeView_ParsedData.EndUpdate();
+                            break;
+                        }
+                    case "CopyCmd": {
+                            strbuilder.Clear();
+                            foreach (var node in GetTreeNodes(treeView_ParsedData.Nodes))
+                            {
+                                strbuilder.AppendLine(node.Text);
+                            }
+                            Clipboard.SetText(strbuilder.ToString());
+                            break;
+                        }
                 }
-                Clipboard.SetText(strbuilder.ToString());
             }
         }
 
@@ -840,7 +860,13 @@ namespace aclogview
         private void checkBoxUseHex_CheckedChanged(object sender, EventArgs e)
         {
             Globals.UseHex = checkBoxUseHex.Checked;
+            var savedExpansionState = treeView_ParsedData.Nodes.GetExpansionState();
+            var savedTopNode = treeView_ParsedData.GetTopNode(); ;
+            treeView_ParsedData.BeginUpdate();
             updateData();
+            treeView_ParsedData.Nodes.SetExpansionState(savedExpansionState);
+            treeView_ParsedData.SetTopNode(savedTopNode);
+            treeView_ParsedData.EndUpdate();
             if (listView_Packets.FocusedItem != null)
             {
                  listView_Packets.Focus();
