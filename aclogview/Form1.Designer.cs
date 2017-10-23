@@ -38,6 +38,8 @@
             this.textBox_PacketData = new System.Windows.Forms.RichTextBox();
             this.treeView_ParsedData = new System.Windows.Forms.TreeView();
             this.parsedContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ExpandAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.CollapseAll = new System.Windows.Forms.ToolStripMenuItem();
             this.CopyCmd = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenu = new System.Windows.Forms.MainMenu(this.components);
             this.menuItem_File = new System.Windows.Forms.MenuItem();
@@ -211,16 +213,30 @@
             // parsedContextMenu
             // 
             this.parsedContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ExpandAll,
+            this.CollapseAll,
             this.CopyCmd});
             this.parsedContextMenu.Name = "parsedContextMenu";
-            this.parsedContextMenu.Size = new System.Drawing.Size(96, 26);
-            this.parsedContextMenu.Click += new System.EventHandler(this.parsedContextMenu_Click);
+            this.parsedContextMenu.Size = new System.Drawing.Size(137, 70);
+            this.parsedContextMenu.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.parsedContextMenu_ItemClicked);
+            // 
+            // ExpandAll
+            // 
+            this.ExpandAll.Name = "ExpandAll";
+            this.ExpandAll.Size = new System.Drawing.Size(136, 22);
+            this.ExpandAll.Text = "&Expand All";
+            // 
+            // CollapseAll
+            // 
+            this.CollapseAll.Name = "CollapseAll";
+            this.CollapseAll.Size = new System.Drawing.Size(136, 22);
+            this.CollapseAll.Text = "C&ollapse All";
             // 
             // CopyCmd
             // 
             this.CopyCmd.Name = "CopyCmd";
             this.CopyCmd.ShowShortcutKeys = false;
-            this.CopyCmd.Size = new System.Drawing.Size(95, 22);
+            this.CopyCmd.Size = new System.Drawing.Size(136, 22);
             this.CopyCmd.Text = "&Copy";
             // 
             // mainMenu
@@ -566,6 +582,8 @@
         private System.Windows.Forms.Button btnHighlight;
         private System.Windows.Forms.MenuItem menuItem_ReOpen;
         private System.Windows.Forms.MenuItem menuItem_ReOpenAsMessages;
+        private System.Windows.Forms.ToolStripMenuItem ExpandAll;
+        private System.Windows.Forms.ToolStripMenuItem CollapseAll;
     }
 }
 
